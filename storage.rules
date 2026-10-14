@@ -1,0 +1,15 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() { return request.auth != null; }
+    function isStaff() { return signedIn() && request.auth.token.admin == true; }
+    function isSelf(uid) { return signedIn() && request.auth.uid == uid; }
+    match /verificationDocuments/{uid}/{allPaths=**} {
+      allow read: if isSelf(uid) || isStaff();
+      allow write: if isSelf(uid) && request.resource.size < 10 * 1024 * 1024 && request.resource.contentType.matches('application/pdf|image/.*');
+      allow delete: if isSelf(uid) || isStaff();
+    }
+    match /vehiclePhotos/{id}/{allPaths=**} { allow read, write: if false; }
+    match /{allPaths=**} { allow read, write: if false; }
+  }
+}

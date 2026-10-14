@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "140511365130",
+    "project_id": "mota-abuja-dev-2026",
+    "storage_bucket": "mota-abuja-dev-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140511365130:android:47d17cf2fa428e6ebc77f3",
+        "android_client_info": {
+          "package_name": "com.mota.mota_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaNe-YIDsHzVD76_Z5sGMydS_9hhsV3vw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

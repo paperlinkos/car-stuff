@@ -1,0 +1,24 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isStaff() { return signedIn() && request.auth.token.admin == true; }
+    function isSelf(id) { return signedIn() && request.auth.uid == id; }
+    match /users/{id} {
+      allow get: if isSelf(id) || isStaff();
+      allow list: if isStaff();
+      allow create, delete: if false;
+      allow update: if isSelf(id) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName', 'phoneNumber', 'updatedAt']);
+    }
+    match /verificationRequests/{id} {
+      allow get: if isSelf(resource.data.userId) || isStaff();
+      allow list: if isStaff();
+      allow create, update, delete: if false;
+    }
+    match /vehicles/{id} { allow read, write: if false; }
+    match /bookings/{id} { allow read, write: if false; }
+    match /payments/{id} { allow read, write: if false; }
+    match /auditLogs/{id} { allow read, write: if false; }
+    match /platformConfiguration/{id} { allow read, write: if isStaff(); }
+  }
+}
