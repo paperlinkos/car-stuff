@@ -1,31 +1,36 @@
-# Phase 2 report — foundation complete, Firebase deployment blocked
+# Phase 2 completion report
 
-## Objective
+## Implemented locally
 
-Prepare authentication, multi-role user profiles and server-enforced access without inventing a Firebase project, credentials, or a document-retention policy.
+- Firebase email/password interface in Flutter: registration, sign-in, sign-out,
+  password reset, persisted session gate, validation, useful errors and email
+  verification notices.
+- Server-created shared profile model with customer default role, account status,
+  optional phone/image fields and trusted timestamps.
+- Customer profile edits limited to permitted fields; owner/driver requests go
+  through a callable Function and remain pending until administrator review.
+- Admin-only Function for approve/reject decisions, role assignment transaction
+  and audit records. Administrator access requires a server-issued custom claim.
+- Deny-by-default Firestore rules, a documented Admin SDK provisioning script,
+  and safe Web/dashboard account entry states that do not fabricate access.
 
-## Built
+## Actual validation
 
-- Firebase project manifest plus deny-by-default Firestore and Storage rules.
-- Cloud Functions source for default customer-profile creation, owner/driver role activation requests, and staff-only activated-role updates.
-- Audit log writes for privileged role changes and role activation requests.
-- Flutter `UserProfile`, `AccountRole`, and verification status domain model with role-based capability helpers.
-- Firebase setup instructions and the outstanding decisions required for a real deployment.
+- flutter analyze — passed.
+- flutter test — passed (4 tests).
+- npm run lint in functions — passed.
+- npm run build in functions — passed.
+- node --check public-site/dist/app.js and node --check
+  public-site/dist/auth.js — passed.
+- Firestore emulator started with firestore.rules and completed a local parse
+  run and the authorization scenario suite successfully.
 
-## Security decisions
+## Not claimed as working
 
-- A client cannot write profiles, assign itself roles, write a booking, vehicle, payment, or audit-log record directly.
-- Requesting owner/driver access produces a pending verification request; it does not activate access.
-- Staff rights depend on a server-issued Firebase Authentication custom claim, not a mutable Firestore field or hidden UI control.
-- Verification documents are private, type-limited to PDFs/images, and capped at 10 MB. Final retention and operational access policy are still decisions for the product owner.
-
-## Validation
-
-- `npm run lint` passed in `functions`.
-- `npm run build` passed in `functions`.
-- `flutter analyze` passed.
-- `flutter test` passed: 4 tests.
-
-## Blocker and next action
-
-There is no selected Firebase development project, so no Firebase configuration was generated and no rules/functions were deployed. The next action is to provide or create the development Firebase project and approve the identity-verification/document-retention approach. After that, configure FlutterFire, deploy to development, and test real sign-up and staff-role flows before starting Phase 3.
+No Firebase services were deployed or changed. Email/password Authentication,
+Firestore, Web app registration, email-action configuration, the Function
+trigger and callable endpoints cannot be exercised until the documented console
+setup and development deployment occur. The rules suite verifies the client
+authorization boundary; it does not invoke the trusted callable approval
+endpoint. Vehicles, bookings, payments and identity-document workflows remain
+out of scope and inactive.

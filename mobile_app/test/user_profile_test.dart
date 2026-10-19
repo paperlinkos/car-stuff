@@ -3,7 +3,9 @@ import 'package:mota_mobile/domain/user_profile.dart';
 
 void main() {
   test('profiles preserve independently activated roles', () {
-    final profile = UserProfile.fromMap('u1', {'roles': ['customer', 'owner']});
+    final profile = UserProfile.fromMap('u1', {
+      'roles': ['customer', 'owner']
+    });
     expect(profile.canUseOwnerArea, isTrue);
     expect(profile.canUseDriverArea, isFalse);
   });
@@ -12,5 +14,14 @@ void main() {
     expect(canRequestActivation(AccountRole.customer), isFalse);
     expect(canRequestActivation(AccountRole.owner), isTrue);
     expect(canRequestActivation(AccountRole.driver), isTrue);
+  });
+
+  test('unknown stored roles cannot grant access', () {
+    final profile = UserProfile.fromMap('u1', {
+      'roles': ['customer', 'administrator']
+    });
+    expect(profile.roles, {AccountRole.customer});
+    expect(profile.canUseOwnerArea, isFalse);
+    expect(profile.canUseDriverArea, isFalse);
   });
 }

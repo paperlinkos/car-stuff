@@ -1,1 +1,325 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mota Operations — Prototype</title><link rel="stylesheet" href="styles.css"></head><body><aside><a class="brand" href="#">M <span>MOTA<br>OPERATIONS</span></a><p class="caption">PHASE 1 · DEMO DATA</p><nav><a class="selected" href="#overview">Overview</a><a href="#reviews">Verification review <b>12</b></a><a href="#vehicles">Vehicles</a><a href="#bookings">Bookings</a><a href="#operations">Inspections & handovers</a><a href="#finance">Finance</a><a href="#incidents">Incidents</a></nav><div class="profile"><i>AO</i><div><strong>Operations admin</strong><small>Authorisation prototype</small></div></div></aside><main id="overview"><header><div><p class="caption">OPERATIONS CONTROL</p><h1>Good morning, Abuja.</h1><p>Here’s a clear view of the marketplace today.</p></div><button>+ Create inspection</button></header><section class="metrics"><article><p>Vehicles awaiting review</p><strong>08</strong><span>+2 this week</span></article><article><p>Open booking requests</p><strong>16</strong><span>Demo only</span></article><article><p>Handover actions today</p><strong>05</strong><span>Across Abuja</span></article><article><p>Open incidents</p><strong>02</strong><span class="alert">Needs attention</span></article></section><section class="split"><article class="panel"><div class="panel-head"><div><p class="caption">QUEUE</p><h2>Verification review</h2></div><a href="#reviews">View queue →</a></div><div class="list"><div><i>AK</i><span><strong>Adanna K.</strong><small>Car owner · Submitted today</small></span><b>Pending</b></div><div><i>IE</i><span><strong>Ibrahim E.</strong><small>Driver · Credential review</small></span><b>Pending</b></div><div><i>CO</i><span><strong>Chidi O.</strong><small>Car owner · Documents incomplete</small></span><b class="muted">Action required</b></div></div></article><article class="panel schedule"><div class="panel-head"><div><p class="caption">TODAY</p><h2>Field schedule</h2></div><a href="#operations">All handovers →</a></div><div class="schedule-item"><time>10:30</time><div><strong>Vehicle inspection</strong><small>Wuse II · Demo vehicle</small></div></div><div class="schedule-item"><time>13:00</time><div><strong>Customer handover</strong><small>Jabi · Demo booking</small></div></div><div class="schedule-item"><time>16:30</time><div><strong>Vehicle return</strong><small>Maitama · Demo booking</small></div></div></article></section><p class="notice">This is a Phase 1 operations layout. No approval, payment, inspection, or customer record is connected to a backend.</p></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mota Operations — Phase 6: Financial Architecture & Ledger</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="phase2.css">
+  <link rel="stylesheet" href="phase6.css">
+</head>
+<body>
+  <aside>
+    <a class="brand" href="#overview">M <span>MOTA<br>OPERATIONS</span></a>
+    <p class="caption">PHASE 6 · FINANCIAL ARCHITECTURE & LEDGER</p>
+    <nav>
+      <a class="selected" href="#overview">Overview</a>
+      <a href="#finance">Transactions & ledger</a>
+      <a href="#payouts">Payout reviews</a>
+      <a href="#refunds">Refunds & deposits</a>
+      <a href="#requests">Role requests</a>
+      <a href="#vehicles">Vehicle approval</a>
+      <a href="#bookings">Bookings & trips</a>
+      <a href="#audit">Audit log</a>
+    </nav>
+    <div class="profile"><i>—</i><div><strong id="adminName">Secure sign-in required</strong><small id="adminState">No administrator session</small></div></div>
+  </aside>
+  <main>
+    <div class="prototype-banner">PROTOTYPE FINANCIAL MODE · NO REAL PAYMENTS OR PAYOUTS PROCESSED · SANDBOX SIMULATION</div>
+    <header id="overview">
+      <div>
+        <p class="caption">OPERATIONS & FINANCIAL CONTROL</p>
+        <h1>Marketplace financials, ledgered.</h1>
+        <p>Phase 6 introduces server-controlled platform commissions, payment provider abstraction, append-only ledger accounting, deposit tracking, and admin payout review.</p>
+      </div>
+      <button id="adminSignIn" type="button">Administrator sign in</button>
+    </header>
+
+    <section class="metrics">
+      <article>
+        <p>Gross Marketplace Volume</p>
+        <strong>₦1,450,000</strong>
+        <span>Snapshot customer charges</span>
+      </article>
+      <article>
+        <p>Platform Commission</p>
+        <strong>₦217,500</strong>
+        <span>15% server-calculated revenue</span>
+      </article>
+      <article>
+        <p>Available Owner Funds</p>
+        <strong>₦482,500</strong>
+        <span>Verified ledger balance</span>
+      </article>
+      <article>
+        <p>Pending Payout Review</p>
+        <strong>₦130,000</strong>
+        <span class="alert">2 requests awaiting decision</span>
+      </article>
+    </section>
+
+    <!-- TRANSACTIONS & RECONCILIATION -->
+    <section class="panel" id="finance">
+      <div class="panel-head">
+        <div>
+          <p class="caption">VERIFIED TRANSACTIONS & RECONCILIATION</p>
+          <h2>Customer Payments & Gateway Events</h2>
+        </div>
+        <span class="secure-tag">Provider Webhook Verified</span>
+      </div>
+      <p>Transactions are initiated with server-calculated price snapshots and verified via HMAC-SHA512 provider signatures. Client success claims are never trusted.</p>
+
+      <table class="financial-table">
+        <thead>
+          <tr>
+            <th>Reference</th>
+            <th>Booking</th>
+            <th>Customer</th>
+            <th>Gross Rental</th>
+            <th>Commission (15%)</th>
+            <th>Deposit</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>mota_pay_bk101_8492</code></td>
+            <td>Mercedes G-Class (2 days)</td>
+            <td>adanna.okafor@example.test</td>
+            <td>₦600,000</td>
+            <td>₦90,000</td>
+            <td>₦50,000</td>
+            <td><span class="badge badge-success">SUCCESSFUL</span></td>
+          </tr>
+          <tr>
+            <td><code>mota_pay_bk102_1109</code></td>
+            <td>Range Rover Autobiography (1 day)</td>
+            <td>emeka.nwosu@example.test</td>
+            <td>₦350,000</td>
+            <td>₦52,500</td>
+            <td>₦0</td>
+            <td><span class="badge badge-success">SUCCESSFUL</span></td>
+          </tr>
+          <tr>
+            <td><code>mota_pay_bk103_9941</code></td>
+            <td>Porsche Taycan Turbo (1 day)</td>
+            <td>tunde.bakare@example.test</td>
+            <td>₦280,000</td>
+            <td>₦42,000</td>
+            <td>₦50,000</td>
+            <td><span class="badge badge-warning">PENDING CHECKOUT</span></td>
+          </tr>
+          <tr>
+            <td><code>mota_pay_bk104_3301</code></td>
+            <td>Lexus ES 350 (2 days)</td>
+            <td>fatima.aliyu@example.test</td>
+            <td>₦220,000</td>
+            <td>₦33,000</td>
+            <td>₦0</td>
+            <td><span class="badge badge-danger">ORPHANED / CANCELLED</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="exception-box">
+        <strong>RECONCILIATION EXCEPTION AUDIT (1 ITEM)</strong>
+        Payment <code>mota_pay_bk104_3301</code> (₦220,000) was confirmed by gateway after customer cancelled booking <code>bk104</code>. The booking was not revived to prevent date conflicts. <strong>Action required:</strong> Process full refund to customer via administrative refund action below.
+      </div>
+    </section>
+
+    <!-- PAYOUTS REVIEW QUEUE -->
+    <section class="split" style="margin-top:24px;">
+      <article class="panel" id="payouts">
+        <div class="panel-head">
+          <div>
+            <p class="caption">FUNDS SETTLEMENT</p>
+            <h2>Owner Payout Queue</h2>
+          </div>
+          <span class="secure-tag">Admin Claim Required</span>
+        </div>
+        <p>Owners can request payouts up to their verified ledger available balance. Payout requests place a ledger hold until administrative review.</p>
+
+        <table class="financial-table">
+          <thead>
+            <tr>
+              <th>Owner ID</th>
+              <th>Amount</th>
+              <th>Available Funds</th>
+              <th>Status</th>
+              <th>Review Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>owner_aliko_fleet</code></td>
+              <td><strong>₦80,000</strong></td>
+              <td>₦190,000</td>
+              <td><span class="badge badge-warning">REQUESTED</span></td>
+              <td>
+                <button type="button" class="btn-small btn-approve" onclick="alert('Payout approved in sandbox mode. Ledger settlement entry recorded.')">Approve</button>
+                <button type="button" class="btn-small btn-reject" onclick="alert('Payout rejected. Funds restored to available balance.')">Reject</button>
+              </td>
+            </tr>
+            <tr>
+              <td><code>owner_maitama_lux</code></td>
+              <td><strong>₦50,000</strong></td>
+              <td>₦125,000</td>
+              <td><span class="badge badge-warning">REQUESTED</span></td>
+              <td>
+                <button type="button" class="btn-small btn-approve" onclick="alert('Payout approved in sandbox mode. Ledger settlement entry recorded.')">Approve</button>
+                <button type="button" class="btn-small btn-reject" onclick="alert('Payout rejected. Funds restored to available balance.')">Reject</button>
+              </td>
+            </tr>
+            <tr>
+              <td><code>owner_wuse_prestige</code></td>
+              <td><strong>₦100,000</strong></td>
+              <td>₦210,000</td>
+              <td><span class="badge badge-success">COMPLETED</span></td>
+              <td><span style="font-size:10px; color:#6b756f;">Settled via sandbox batch</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+      <!-- REFUNDS & SECURITY DEPOSITS -->
+      <article class="panel" id="refunds">
+        <div class="panel-head">
+          <div>
+            <p class="caption">ESCROW & ADJUSTMENTS</p>
+            <h2>Deposits & Refunds</h2>
+          </div>
+          <span class="secure-tag">Escrow Separated</span>
+        </div>
+        <p>Security deposits are held in separate customer escrow accounts and never mixed with owner earnings. Refunds are validated against remaining refundable balances.</p>
+
+        <h3 style="font-size:13px; margin:16px 0 6px;">Security Deposits Tracking</h3>
+        <table class="financial-table">
+          <thead>
+            <tr>
+              <th>Booking</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>bk101</code> (G-Class)</td>
+              <td>₦50,000</td>
+              <td><span class="badge badge-info">HELD IN ESCROW</span></td>
+              <td><button type="button" class="btn-small btn-approve" onclick="alert('Security deposit released to customer.')">Release</button></td>
+            </tr>
+            <tr>
+              <td><code>bk103</code> (Taycan)</td>
+              <td>₦50,000</td>
+              <td><span class="badge badge-warning">PENDING PAYMENT</span></td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="font-size:13px; margin:20px 0 6px;">Completed Refunds</h3>
+        <table class="financial-table">
+          <thead>
+            <tr>
+              <th>Refund ID</th>
+              <th>Amount</th>
+              <th>Reason</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>ref_88192</code></td>
+              <td>₦45,000</td>
+              <td>Early vehicle return agreement</td>
+              <td><span class="badge badge-success">COMPLETED</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+
+    <!-- IMMUTABLE LEDGER EXPLORER -->
+    <section class="panel" style="margin-top:24px;">
+      <div class="panel-head">
+        <div>
+          <p class="caption">AUDITABLE DOUBLE-ENTRY ACCOUNTING</p>
+          <h2>Append-Only Financial Ledger Explorer</h2>
+        </div>
+        <span class="secure-tag">Immutable Records</span>
+      </div>
+      <p>Financial integrity is preserved by never modifying or deleting entries. All corrections, cancellations, and settlements are recorded as new audit entries.</p>
+
+      <table class="financial-table">
+        <thead>
+          <tr>
+            <th>Entry ID</th>
+            <th>Account</th>
+            <th>Type</th>
+            <th>Direction</th>
+            <th>Amount</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>led_001</code></td>
+            <td><code>platform</code></td>
+            <td>rental_charge</td>
+            <td><span class="badge badge-credit">CREDIT</span></td>
+            <td>₦600,000</td>
+            <td>Customer rental payment received for bk101</td>
+          </tr>
+          <tr>
+            <td><code>led_002</code></td>
+            <td><code>platform</code></td>
+            <td>platform_commission</td>
+            <td><span class="badge badge-credit">CREDIT</span></td>
+            <td>₦90,000</td>
+            <td>15% marketplace commission on bk101</td>
+          </tr>
+          <tr>
+            <td><code>led_003</code></td>
+            <td><code>owner_aliko_fleet</code></td>
+            <td>owner_credit</td>
+            <td><span class="badge badge-credit">CREDIT</span></td>
+            <td>₦510,000</td>
+            <td>Net owner earnings on bk101</td>
+          </tr>
+          <tr>
+            <td><code>led_004</code></td>
+            <td><code>escrow_deposit_adanna</code></td>
+            <td>deposit_collected</td>
+            <td><span class="badge badge-credit">CREDIT</span></td>
+            <td>₦50,000</td>
+            <td>Security deposit held in escrow for bk101</td>
+          </tr>
+          <tr>
+            <td><code>led_005</code></td>
+            <td><code>owner_aliko_fleet</code></td>
+            <td>payout_hold</td>
+            <td><span class="badge badge-debit">DEBIT</span></td>
+            <td>₦80,000</td>
+            <td>Owner payout request placed on hold</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel audit" id="audit" style="margin-top:24px;">
+      <div class="panel-head">
+        <div>
+          <p class="caption">GOVERNANCE & AUDIT</p>
+          <h2>Audit log</h2>
+        </div>
+        <span class="secure-tag">Administrator-only</span>
+      </div>
+      <p>All financial actions (payment initialization, webhook verification, payout review, refund authorization, deposit release) are cryptographically audited on the server.</p>
+    </section>
+
+    <p class="notice">Phase 6 implementation. This administrative prototype demonstrates the complete financial data model and server accounting logic in local sandbox mode without deploying live cloud resources.</p>
+  </main>
+  <dialog id="adminDialog"><button class="dialog-close" id="closeAdmin" aria-label="Close">×</button><p class="caption">ADMINISTRATOR ACCESS</p><h2>Sign in securely.</h2><p id="adminDialogState">Firebase Web configuration is needed before administrator sign-in can be enabled. No account details are collected in this dashboard.</p></dialog>
+  <script src="auth-state.js"></script>
+</body>
+</html>

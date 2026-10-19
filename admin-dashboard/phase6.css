@@ -1,0 +1,109 @@
+.prototype-banner {
+  background: #fef3c7;
+  color: #92400e;
+  border-bottom: 1px solid #fde68a;
+  padding: 8px 16px;
+  font: 700 11px 'DM Mono', monospace;
+  letter-spacing: 0.05em;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.financial-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+  font-size: 12px;
+}
+
+.financial-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: #f7f7f3;
+  color: #6b756f;
+  font: 700 10px 'DM Mono', monospace;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #dfe4df;
+}
+
+.financial-table td {
+  padding: 12px;
+  border-bottom: 1px solid #dfe4df;
+  vertical-align: middle;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font: 700 10px 'DM Mono', monospace;
+  letter-spacing: 0.04em;
+}
+
+.badge-success {
+  background: #e9f5ed;
+  color: #008751;
+}
+
+.badge-warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-danger {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.badge-info {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.badge-credit {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badge-debit {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 0;
+}
+
+.btn-approve {
+  background: #008751;
+  color: #fff;
+}
+
+.btn-reject {
+  background: #fee2e2;
+  color: #991b1b;
+  margin-left: 6px;
+}
+
+.exception-box {
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  padding: 12px 16px;
+  margin-top: 16px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.exception-box strong {
+  display: block;
+  font-size: 11px;
+  color: #b45309;
+  margin-bottom: 4px;
+  font-family: 'DM Mono', monospace;
+}

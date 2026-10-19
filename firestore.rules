@@ -2,23 +2,123 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
-    function isStaff() { return signedIn() && request.auth.token.admin == true; }
+    function isAdmin() { return signedIn() && request.auth.token.admin == true; }
     function isSelf(id) { return signedIn() && request.auth.uid == id; }
-    match /users/{id} {
-      allow get: if isSelf(id) || isStaff();
-      allow list: if isStaff();
-      allow create, delete: if false;
-      allow update: if isSelf(id) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName', 'phoneNumber', 'updatedAt']);
+    function approvedOwner() {
+      return signedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles.hasAny(['owner']);
     }
-    match /verificationRequests/{id} {
-      allow get: if isSelf(resource.data.userId) || isStaff();
-      allow list: if isStaff();
+    function permittedProfileUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['displayName', 'phoneNumber', 'profileImageUrl', 'updatedAt'])
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() >= 2
+        && request.resource.data.displayName.size() <= 100
+        && (!('phoneNumber' in request.resource.data)
+          || request.resource.data.phoneNumber == null
+          || (request.resource.data.phoneNumber is string
+            && request.resource.data.phoneNumber.size() <= 32))
+        && (!('profileImageUrl' in request.resource.data)
+          || request.resource.data.profileImageUrl == null
+          || (request.resource.data.profileImageUrl is string
+            && request.resource.data.profileImageUrl.size() <= 2048))
+        && request.resource.data.updatedAt == request.time;
+    }
+
+    // Created and populated only by trusted Admin SDK code. The client may
+    // change only the presentation fields validated above.
+    match /users/{id} {
+      allow get: if isSelf(id) || isAdmin();
+      allow list: if isAdmin();
+      allow create, delete: if false;
+      allow update: if isSelf(id) && permittedProfileUpdate();
+    }
+
+    // Role requests are created and decided by callable functions. A customer
+    // can only read their own request; admins can review all requests.
+    match /roleRequests/{id} {
+      allow get, list: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
       allow create, update, delete: if false;
     }
-    match /vehicles/{id} { allow read, write: if false; }
-    match /bookings/{id} { allow read, write: if false; }
-    match /payments/{id} { allow read, write: if false; }
-    match /auditLogs/{id} { allow read, write: if false; }
-    match /platformConfiguration/{id} { allow read, write: if isStaff(); }
+
+    match /auditLogs/{id} {
+      allow get, list: if isAdmin();
+      allow create, update, delete: if false;
+    }
+
+    match /vehicles/{id} {
+      // Public reads are limited to listings which trusted staff have approved.
+      allow get, list: if resource.data.status == 'approved' ||
+        isAdmin() || (signedIn() && resource.data.ownerId == request.auth.uid);
+      allow create: if approvedOwner() && request.resource.data.ownerId == request.auth.uid &&
+        request.resource.data.status == 'draft';
+      // Owners retain control only of drafts and listings returned for changes.
+      // Submission and every review decision use callable Functions.
+      allow update: if approvedOwner() && resource.data.ownerId == request.auth.uid &&
+        resource.data.status in ['draft', 'changesRequested'] &&
+        request.resource.data.ownerId == request.auth.uid &&
+        request.resource.data.status == resource.data.status &&
+        !request.resource.data.diff(resource.data).affectedKeys()
+          .hasAny(['reviewedBy', 'reviewedAt', 'reviewNote', 'submittedAt']);
+      allow delete: if approvedOwner() && resource.data.ownerId == request.auth.uid &&
+        resource.data.status == 'draft';
+    }
+    // Private document paths and review metadata never live on the public
+    // vehicle document. Clients cannot create or alter this metadata.
+    match /vehicleDocuments/{id} {
+      allow get, list: if isAdmin() ||
+        (signedIn() && resource.data.ownerId == request.auth.uid);
+      allow create, update, delete: if false;
+    }
+    // Bookings are created and transitioned only by trusted callable code.
+    // Relevant parties can read, never enumerate unrelated requests.
+    match /bookings/{id} {
+      allow get: if isAdmin() || (signedIn() &&
+        (resource.data.customerId == request.auth.uid || resource.data.ownerId == request.auth.uid));
+      allow list: if isAdmin() || (signedIn() &&
+        (resource.data.customerId == request.auth.uid || resource.data.ownerId == request.auth.uid));
+      allow create, update, delete: if false;
+    }
+    match /bookingIdempotency/{id} { allow read, write: if false; }
+    match /processedEvents/{id} { allow read, write: if false; }
+
+    // Financial records are written and transitioned exclusively by trusted
+    // backend Cloud Functions. Clients have private read access to their own
+    // records; admins have full review access.
+    match /payments/{id} {
+      allow get, list: if isAdmin() || (signedIn() &&
+        (resource.data.customerId == request.auth.uid || resource.data.ownerId == request.auth.uid));
+      allow create, update, delete: if false;
+    }
+
+    match /securityDeposits/{id} {
+      allow get, list: if isAdmin() || (signedIn() &&
+        (resource.data.customerId == request.auth.uid || resource.data.ownerId == request.auth.uid));
+      allow create, update, delete: if false;
+    }
+
+    match /refunds/{id} {
+      allow get, list: if isAdmin() || (signedIn() &&
+        (resource.data.requestedBy == request.auth.uid || resource.data.authorizedBy == request.auth.uid));
+      allow create, update, delete: if false;
+    }
+
+    match /payouts/{id} {
+      allow get, list: if isAdmin() || (signedIn() && resource.data.ownerId == request.auth.uid);
+      allow create, update, delete: if false;
+    }
+
+    match /financialLedger/{id} {
+      allow get, list: if isAdmin() || (signedIn() &&
+        (resource.data.accountId == 'owner_' + request.auth.uid ||
+         resource.data.accountId == 'payout_pending_' + request.auth.uid));
+      allow create, update, delete: if false;
+    }
+
+    match /platformConfiguration/{id} {
+      allow get, list: if signedIn();
+      allow create, update, delete: if isAdmin();
+    }
+    match /{allPaths=**} { allow read, write: if false; }
   }
 }

@@ -9,7 +9,21 @@ service firebase.storage {
       allow write: if isSelf(uid) && request.resource.size < 10 * 1024 * 1024 && request.resource.contentType.matches('application/pdf|image/.*');
       allow delete: if isSelf(uid) || isStaff();
     }
-    match /vehiclePhotos/{id}/{allPaths=**} { allow read, write: if false; }
+    // Images are private while listings are in review; do not use download
+    // URLs as public-document access control. A later public-media workflow
+    // must copy only approved images to a separate reviewed path.
+    match /vehiclePhotos/{uid}/{listingId}/{allPaths=**} {
+      allow read: if isSelf(uid) || isStaff();
+      allow write: if isSelf(uid) && request.resource.size < 10 * 1024 * 1024 &&
+        request.resource.contentType.matches('image/(jpeg|png|webp)');
+      allow delete: if isSelf(uid) || isStaff();
+    }
+    match /vehicleDocuments/{uid}/{listingId}/{allPaths=**} {
+      allow read: if isSelf(uid) || isStaff();
+      allow write: if isSelf(uid) && request.resource.size < 10 * 1024 * 1024 &&
+        request.resource.contentType.matches('application/pdf|image/(jpeg|png|webp)');
+      allow delete: if isSelf(uid) || isStaff();
+    }
     match /{allPaths=**} { allow read, write: if false; }
   }
 }
