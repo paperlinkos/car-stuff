@@ -1,0 +1,5 @@
+#accountForm{display:grid;gap:13px;margin:22px 0 10px}
+#accountForm label{display:grid;gap:7px;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.03em}
+#accountForm input{border:1px solid var(--line);border-radius:0;padding:12px;color:var(--ink);font:14px var(--sans)}
+#accountForm .button{width:100%;margin-top:3px}
+.text-button[disabled],#accountForm :disabled{opacity:.55;cursor:not-allowed}

@@ -126,5 +126,5 @@ financial domain test, and Firestore emulator authorization suite pass with 100%
 
 The repository has existing work from prior phases across the public site,
 admin dashboard, Flutter app, rules, Functions and documentation. Preserve
-unrelated changes. `public-site/` is a nested repository and should not be
-added to the outer repository by accident.
+unrelated changes. `public-site/` is integrated into this repository.
+
